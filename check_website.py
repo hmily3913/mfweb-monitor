@@ -7,7 +7,8 @@ import os  # 用于读取 GitHub Secrets 环境变量
 # 网站和邮箱配置
 URL = os.getenv("MONITOR_URL")  # 需要监控的网站
 EMAIL_FROM = os.getenv("EMAIL_FROM")          # 发件邮箱（163邮箱）
-EMAIL_TO = os.getenv("EMAIL_TO")              # 收件人邮箱
+EMAIL_TO = os.getenv("EMAIL_TO")              # 收件人邮箱1
+EMAIL_TO_2 = os.getenv("EMAIL_TO_2")          # 收件人邮箱2
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")  # 163邮箱授权码（不是登录密码）
 
 def check_website():
@@ -33,12 +34,15 @@ def send_email_alert(message):
     # 163 SMTP服务器配置
     smtp_server = "smtp.163.com"
     smtp_port = 465  # SSL端口
+    
+    # 收件人列表
+    receiver_emails = [EMAIL_TO, EMAIL_TO_2]
 
     try:
         with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
             server.login(EMAIL_FROM, EMAIL_PASSWORD)
-            server.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
-            print("📧 报警邮件已发送。")
+            server.sendmail(EMAIL_FROM,  receiver_emails, msg.as_string())
+            print("📧 报警邮件已发送。", receiver_emails)
     except Exception as e:
         print(f"❌ 发送邮件失败：{e}")
 
